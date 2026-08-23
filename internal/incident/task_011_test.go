@@ -1,0 +1,3 @@
+package incident
+import "testing"
+func TestTask011(t *testing.T){r:=New();_ = r.Report(Incident{ID:"i",RegionID:"r",Reporter:"u",Kind:"flood"});_ = r.Transition("i",Triaged,"u");_ = r.Transition("i",Assigned,"u");_ = r.Transition("i",Mitigating,"u");_ = r.AddAction(Action{ID:"a",IncidentID:"i",Actor:"crew",Kind:"drain"});if e:=r.RemoveAction("a");e!=nil{t.Fatal("active action could not be withdrawn",e)};if _,ok:=r.Action("a");ok{t.Fatal("withdrawn action remains")}}
