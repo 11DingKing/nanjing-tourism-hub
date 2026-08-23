@@ -1,0 +1,3 @@
+package escalation
+import("testing";"time")
+func TestTask012(t *testing.T){e:=New();_ = e.Rule(Rule{Code:"flood",After:time.Hour});opened:=time.Now().Add(-2*time.Hour);_ = e.Open(Incident{ID:"i",RegionID:"r",Code:"flood",OpenedAt:&opened});ack:=time.Now();_ = e.Acknowledge("i","operator",ack);if due:=e.Due(ack.Add(30*time.Minute));len(due)!=0{t.Fatal("acknowledged incident escalated before renewed SLA")}}
