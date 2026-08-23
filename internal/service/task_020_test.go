@@ -1,0 +1,3 @@
+package service
+import("context";"testing";"time";"github.com/11DingKing/autumn-grain-resilience/internal/config";"github.com/11DingKing/autumn-grain-resilience/internal/storage")
+func TestTask020(t *testing.T){db,e:=storage.Open(":memory:");if e!=nil{t.Fatal(e)};defer db.Close();_ = storage.Migrate(context.Background(),db);s:=NewRegistry(db,nil,config.Config{SessionTTL:-time.Minute}).Auth;u,_:=s.Register(context.Background(),"u","operator","p");session,_:=s.Login(context.Background(),u.ID,"p");if _,e=s.Authenticate(context.Background(),session.ID);e==nil{t.Fatal("expired session authenticated")}}
