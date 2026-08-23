@@ -1,0 +1,36 @@
+# Nanjing Inbound Tourism Hub
+
+Nanjing Inbound Tourism Hub is a Go backend for coordinating typhoon and extreme-rainfall emergency operations. It manages warning publication, multi-region response activation, shelter capacity, rescue-team dispatch, supply allocation, district tasks, field receipts, incident closure, audit events, and durable background work.
+
+## Runtime
+
+- Go 1.26
+- SQLite through a production SQL driver
+- HTTP on `:52822` by default
+- Durable sessions, migrations, outbox events, and retryable jobs
+
+Start locally:
+
+```bash
+cp .env.example .env
+GOTOOLCHAIN=local go run ./cmd/server
+curl http://127.0.0.1:52822/healthz
+curl http://127.0.0.1:52822/readyz
+```
+
+The first start creates local development accounts for duty, dispatch, review, and field roles. Override the example credentials before deployment. Sessions are server-side, expiring and revocable; logout invalidates a stored session.
+
+## Business flow
+
+Duty officers publish Central Meteorological Observatory warning material and activate an incident across affected regions. Dispatchers reserve shelter capacity, create regional response tasks, allocate rescue teams and emergency supplies, and collect field receipts. Reviewers settle receipts and archive a fully closed incident. Every state-changing workflow writes audit and outbox records in the same database transaction.
+
+## Verification
+
+```bash
+make test
+make race
+make vet
+make build
+docker build -t nanjing-tourism-hub .
+```
+
