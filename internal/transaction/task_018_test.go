@@ -1,0 +1,3 @@
+package transaction
+import("context";"errors";"testing";"github.com/11DingKing/autumn-grain-resilience/internal/storage")
+func TestTask018(t *testing.T){db,e:=storage.Open(":memory:");if e!=nil{t.Fatal(e)};defer db.Close();if _,e=db.Exec("create table x(v text)");e!=nil{t.Fatal(e)};tx,e:=db.BeginTx(context.Background(),nil);if e!=nil{t.Fatal(e)};e=WithSavepoint(context.Background(),tx,"item",func()error{_,e:=tx.Exec("insert into x values('partial')");if e!=nil{return e};return errors.New("validation failed")});if e==nil{t.Fatal("savepoint error hidden")};if e=tx.Commit();e!=nil{t.Fatal(e)};var n int;if e=db.QueryRow("select count(*) from x").Scan(&n);e!=nil{t.Fatal(e)};if n!=0{t.Fatal("failed savepoint data committed",n)}}
