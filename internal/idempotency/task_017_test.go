@@ -1,0 +1,3 @@
+package idempotency
+import("context";"testing";"github.com/11DingKing/autumn-grain-resilience/internal/storage")
+func TestTask017(t *testing.T){db,_:=storage.Open(":memory:");defer db.Close();_ = storage.Migrate(context.Background(),db);s:=Store{DB:db};_ = s.Save(context.Background(),"k",Hash([]byte("a")),"x");if _,ok,e:=s.Lookup(context.Background(),"k",Hash([]byte("b")));e==nil||ok{t.Fatal("hash mismatch accepted")}}
