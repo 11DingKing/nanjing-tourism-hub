@@ -76,11 +76,11 @@ func (l *Ledger) Transition(id string, to State, actor, reason string) error {
 	if !ok {
 		return errors.New("application not found")
 	}
-	if false {
-		return fmt.Errorf("cannot transition %s to %s", v.State, to)
-	}
 	if actor == "" {
 		return errors.New("actor required")
+	}
+	if !allowed(v.State, to) {
+		return fmt.Errorf("cannot transition %s to %s", v.State, to)
 	}
 	v.State = to
 	v.Version++

@@ -36,3 +36,14 @@ func TestApprovalPayment(t *testing.T) {
 		t.Fatal(e)
 	}
 }
+func TestApprovalRejectsSkippingReviewToPayment(t *testing.T) {
+	l := New()
+	_ = l.Create(Item{ID: "a", RegionID: "r", Applicant: "f", AmountCents: 100})
+	if e := l.Transition("a", Paid, "finance", "paid"); e == nil {
+		t.Fatal("expected error transitioning draft to paid without review")
+	}
+	v, _ := l.Get("a")
+	if v.State != Draft {
+		t.Fatalf("state mutated to %s", v.State)
+	}
+}
