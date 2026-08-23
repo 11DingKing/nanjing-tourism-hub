@@ -1,0 +1,3 @@
+package logistics
+import("context";"testing")
+func TestTask009(t *testing.T){s:=New();_ = s.Add(Item{ID:"seed",RegionID:"r",Name:"seed",Unit:"kg",Quantity:10});ctx,cancel:=context.WithCancel(context.Background());cancel();if e:=s.ReserveBatch(ctx,map[string]float64{"seed":4});e==nil{t.Fatal("cancellation ignored")};item,_:=s.Get("seed");if item.Reserved!=0{t.Fatal("cancelled batch changed stock",item.Reserved)}}
