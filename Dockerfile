@@ -1,0 +1,8 @@
+FROM golang:1.26
+WORKDIR /app
+COPY go.mod go.sum ./
+RUN go mod download
+COPY . .
+RUN go build -o /bin/autumn-grain ./cmd/server
+EXPOSE 8080
+ENTRYPOINT ["/bin/autumn-grain"]
