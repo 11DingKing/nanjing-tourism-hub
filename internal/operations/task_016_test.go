@@ -1,0 +1,3 @@
+package operations
+import("context";"testing")
+func TestTask016(t *testing.T){q:=NewQueue();_ = q.Enqueue(Task{ID:"x",RegionID:"r",PlotID:"p",Kind:Inspection});runner:=Runner{Queue:q,MaxAttempts:2,Handler:func(context.Context,Task)error{return nil}};if _,e:=runner.RunOnce(context.Background(),"worker");e!=nil{t.Fatal(e)};stored,_:=q.Get("x");if stored.Status!=Succeeded{t.Fatal("successful worker left task claimed",stored.Status)}}
